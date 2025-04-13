@@ -3,7 +3,8 @@ const isLocal = location.hostname === 'localhost' ||
     location.port === '4173';
 
 if (isLocal) {
-    import('./src/main.js'); // ← 修正ここ！
+    // 開発時のみ動的 import（ビルド対象に含めない）
+    eval('import("./src/main.js")');
 } else {
     const base = location.pathname.replace(/\/[^/]*$/, '/') || '/';
     fetch(`${base}manifest.json`)
