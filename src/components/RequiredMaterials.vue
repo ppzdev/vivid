@@ -43,7 +43,7 @@ function updateQuery() {
 watch([quantity, selectedRankIndex, counts], updateQuery, {deep: true})
 
 const increment = (index) => {
-  if (counts.value[index] + 1 === props.needs && index < props.ranks.length - 1) {
+  if (quantity.value === 1 && counts.value[index] + 1 === props.needs && index < props.ranks.length - 1) {
     counts.value[index] = 0
     if (index < selectedRankIndex.value) {
       increment(index + 1)
@@ -113,7 +113,7 @@ let getGradeLabel = (index, total) => {
           class="mb-4 px-2 py-1 rounded-md grade-frame grade-bg"
           :class="getGradeLabel(index, ranks.length)"
       >
-        <h4 class="grade-text font-bold" :class="getGradeLabel(index, ranks.length)">{{ rank }}</h4>
+        <h4 class="pl-1 mb-1 grade-mark font-bold" :class="getGradeLabel(index, ranks.length)">{{ rank }}</h4>
         <div class="flex items-center justify-center gap-4 pb-1">
           <button
               @click="decrement(index)"
