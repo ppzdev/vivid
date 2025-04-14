@@ -139,8 +139,10 @@ let addToCount = (index, value) => {
 
           <input
               type="number"
-              class="h-10 min-w-[80px] max-w-[100%] flex-1 text-center text-xl font-mono border border-gray-300 rounded py-1
+              class="h-10 min-w-[80px] max-w-[100%] flex-1 text-center text-xl font-mono rounded py-1
                appearance-none focus:outline-none focus:ring-0
+               bg-white text-black border border-gray-300
+               dark:bg-gray-800 dark:text-white dark:border-gray-600
                [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
                [-moz-appearance:textfield]"
               :class="getGradeLabel(index, ranks.length)"

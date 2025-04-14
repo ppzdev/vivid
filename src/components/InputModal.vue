@@ -1,55 +1,60 @@
 <template>
-  <div
-      v-if="visible"
-      class="absolute left-0 top-0 w-full z-50 bg-black/50 flex items-center justify-center"
-      :style="{ height: '100dvh' }"
-      @click.self="cancel"
-  >
-    <div class="bg-white rounded shadow-md w-80 p-4">
-      <h2 class="text-lg font-bold text-center mb-3">{{ message }}</h2>
+  <transition name="fade" appear>
+    <div
+        v-show="visible"
+        class="fixed left-0 top-0 w-full z-50 bg-black/50 flex items-center justify-center"
+        :style="{ height: '100dvh' }"
+        @click.self="cancel"
+    >
+      <div class="bg-white dark:bg-gray-700 rounded shadow-md w-80 p-4 mb-16">
+        <h2 class="text-lg font-bold text-center mb-3">{{ message }}</h2>
 
-      <input
-          ref="inputRef"
-          v-model.number="inputValue"
-          type="number"
-          inputmode="numeric"
-          class="
-          h-10 w-full text-center text-xl font-mono border border-gray-300 rounded py-1
-          appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
-          [-moz-appearance:textfield]
-        "
-          autofocus
-          @blur="handleBlur"
-      />
+        <input
+            ref="inputRef"
+            v-model.number="inputValue"
+            type="number"
+            inputmode="numeric"
+            class="
+             h-10 w-full text-center text-xl font-mono rounded py-1
+             bg-white text-black border border-gray-300
+             dark:bg-gray-800 dark:text-white dark:border-gray-600
+             appearance-none [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
+             [-moz-appearance:textfield]
+            "
+            autofocus
+            @blur="handleBlur"
+        />
 
-      <p
-          v-if="typeof inputValue === 'number' && !isNaN(inputValue)"
-          class="text-center text-sm text-gray-600 font-mono"
-      >
-        {{ props.modelValue }} + {{ inputValue }} = {{ props.modelValue + inputValue }}
-      </p>
-
-      <div class="flex justify-between mt-4">
-        <button
-            @click="cancel"
-            class="h-10 px-4 bg-gray-300 text-black font-bold rounded hover:bg-gray-200"
+        <p
+            v-if="typeof inputValue === 'number' && !isNaN(inputValue)"
+            class="text-center text-sm text-gray-600 dark:text-gray-300 font-mono"
         >
-          キャンセル
-        </button>
-        <button
-            @click="confirm"
-            class="h-10 px-4 bg-gray-800 text-white font-bold rounded hover:bg-gray-900"
-        >
-          決定
-        </button>
+          {{ props.modelValue }} + {{ inputValue }} = {{ props.modelValue + inputValue }}
+        </p>
+
+        <div class="flex justify-between mt-4">
+          <button
+              @click="cancel"
+              class="h-10 px-4 bg-gray-300 text-black font-bold rounded
+               dark:bg-gray-600 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-500"
+          >
+            キャンセル
+          </button>
+          <button
+              @click="confirm"
+              class="h-10 px-4 bg-gray-800 text-white font-bold rounded hover:bg-gray-900"
+          >
+            決定
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 
 <script setup>
-import { ref, watch, nextTick } from 'vue'
+import {ref, watch, nextTick} from 'vue'
 
 const props = defineProps({
   visible: Boolean,
@@ -64,6 +69,27 @@ const inputValue = ref(0)
 const inputRef = ref(null)
 let blurTimeout = null
 let confirmed = false
+
+let scrollPosition = 0
+
+watch(() => props.visible, (val) => {
+  if (val) {
+    // スクロール位置を保存
+    scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
+    // スクロールを無効化
+    document.body.style.overflow = 'hidden'
+    nextTick(() => {
+      if (inputValue.value === 0) {
+        inputValue.value = ''
+      }
+      inputRef.value?.focus()
+    })
+  } else {
+    // スクロール位置を戻す
+    document.body.style.overflow = 'auto'
+    window.scrollTo(0, scrollPosition)
+  }
+})
 
 watch(() => props.visible, (val) => {
   if (val) {
@@ -98,3 +124,15 @@ function cancel() {
   inputValue.value = 0
 }
 </script>
+
+<style lang="scss">
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+</style>
