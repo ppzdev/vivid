@@ -63,12 +63,12 @@ const emits = defineEmits(['close', 'confirm'])
 const inputValue = ref(0)
 const inputRef = ref(null)
 let blurTimeout = null
-let confirmed = false  // ✅ confirmのロック用フラグ
+let confirmed = false
 
 watch(() => props.visible, (val) => {
   if (val) {
     confirmed = false
-    inputValue.value = ''
+    inputValue.value = null
     nextTick(() => {
       inputRef.value?.focus()
     })
@@ -76,7 +76,7 @@ watch(() => props.visible, (val) => {
 })
 
 function confirm() {
-  if (confirmed) return  // ✅ 多重実行防止
+  if (confirmed) return
   confirmed = true
 
   const value = Number(inputValue.value)
@@ -88,7 +88,7 @@ function confirm() {
 
 function handleBlur() {
   blurTimeout = setTimeout(() => {
-    confirm()  // ✅ フォーカス外れ時も仕様通り confirm を呼ぶ
+    confirm()
   }, 100)
 }
 

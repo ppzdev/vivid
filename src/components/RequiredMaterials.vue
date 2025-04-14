@@ -66,7 +66,7 @@ let getGradeLabel = (index, total) => {
 
 let clearIfZero = (index) => {
   if (counts.value[index] === 0) {
-    counts.value[index] = ''
+    counts.value[index] = null
   }
 }
 
