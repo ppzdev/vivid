@@ -9,11 +9,16 @@ const weapons = ['白', '緑', '青', '紫', '橙']
 <template>
   <header>
   </header>
-  <h1 class="text-2xl text-blue-600 font-bold border-b border-b-blue-200 mb-4">素材あといくついるの？</h1>
+  <h1 class="mb-4">
+    <a
+        href="."
+        class="text-2xl text-blue-600 font-bold border-b border-b-blue-200"
+    >素材あといくついるの？</a>
+  </h1>
   <main>
     <RequiredMaterials title="部品" name="equipments" :needs="3" :ranks="equipments"/>
     <RequiredMaterials title="スキル" name="skill" :needs="3" :ranks="skills"/>
-    <RequiredMaterials title="兵器庫材料" :needs="4" name="weapon" :ranks="weapons"/>
+    <RequiredMaterials title="装備材料" :needs="4" name="weapon" :ranks="weapons"/>
   </main>
 </template>
 

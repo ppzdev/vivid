@@ -1,5 +1,6 @@
 <script setup>
 import {ref, computed, watch, onMounted} from 'vue'
+import InputModal from './InputModal.vue'
 
 const props = defineProps({
   title: String,
@@ -42,21 +43,6 @@ function updateQuery() {
 
 watch([quantity, selectedRankIndex, counts], updateQuery, {deep: true})
 
-const increment = (index) => {
-  if (quantity.value === 1 && counts.value[index] + 1 === props.needs && index < props.ranks.length - 1) {
-    counts.value[index] = 0
-    if (index < selectedRankIndex.value) {
-      increment(index + 1)
-    }
-  } else {
-    counts.value[index]++
-  }
-}
-
-const decrement = (index) => {
-  if (counts.value[index] > 0) counts.value[index]--
-}
-
 const required = computed(() => {
   let all = props.needs ** (selectedRankIndex.value) * quantity.value
   let useCounts = counts.value.slice(0, selectedRankIndex.value + 1)
@@ -78,16 +64,42 @@ let getGradeLabel = (index, total) => {
   return 'grade-1';
 }
 
+let clearIfZero = (index) => {
+  if (counts.value[index] === 0) {
+    counts.value[index] = ''
+  }
+}
+
+let restoreIfEmpty = (index) => {
+  if (counts.value[index] === '' || counts.value[index] === null) {
+    counts.value[index] = 0
+  }
+}
+
+// Modal
+const showModal = ref(false)
+const modalIndex = ref(0)
+
+let openModal = (index) => {
+  modalIndex.value = index
+  showModal.value = true
+}
+
+let addToCount = (index, value) => {
+  counts.value[index] += value
+  showModal.value = false
+}
+
 </script>
 
 <template>
   <h2 class="font-bold text-xl">{{ title }}(素材数: {{ needs }}個)</h2>
 
-  <h3><label for="rank" class="font-bold text-l block mb-2">1. 必要数を計算したいものを選択</label></h3>
+  <h3><label for="rank" class="font-bold text-l block mb-2">1. 必要数を計算したいもの</label></h3>
   <select
       id="rank"
       v-model="selectedRankIndex"
-      class="block w-full max-w-xs p-2 rounded mb-4
+      class="block w-full max-w-xs h-10 px-3 py-2 text-xl font-bold rounded mb-4
          bg-white text-black border border-gray-300
          dark:bg-gray-800 dark:text-white dark:border-gray-600"
   >
@@ -99,39 +111,48 @@ let getGradeLabel = (index, total) => {
   <input
       type="number"
       v-model="quantity"
-      class="w-20 max-w-xs p-2 rounded mb-4
+      class="h-10 w-20 text-center text-xl rounded px-3 py-1 mb-4
          bg-white text-black border border-gray-300
-         dark:bg-gray-800 dark:text-white dark:border-gray-600"
+         dark:bg-gray-800 dark:text-white dark:border-gray-600
+         appearance-none focus:outline-none focus:ring-0
+         [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
+         [-moz-appearance:textfield]"
   /> 個
 
-  <h3 class="font-bold text-l">2. すでに持っているものを入力</h3>
-  <ul class="table mb-4">
+  <h3 class="font-bold text-l">2. すでに持っているもの</h3>
+  <ul class="mb-4">
     <li
         v-for="(rank, index) in ranks.slice(0, selectedRankIndex + 1)"
-        :key="index">
+        :key="index"
+    >
       <div
           class="mb-4 px-2 py-1 rounded-md grade-frame grade-bg"
           :class="getGradeLabel(index, ranks.length)"
       >
-        <h4 class="pl-1 mb-1 grade-mark font-bold" :class="getGradeLabel(index, ranks.length)">{{ rank }}</h4>
-        <div class="flex items-center justify-center gap-4 pb-1">
-          <button
-              @click="decrement(index)"
-              class="px-4 py-2 bg-gray-600/30 text-white font-bold rounded hover:bg-gray-600/20"
-          >
-            −
-          </button>
-
-          <div
-              class="w-12 text-center text-xl font-mono border border-gray-300 rounded py-1"
+        <div class="flex items-center gap-2 flex-nowrap overflow-hidden">
+          <h4
+              class="font-bold flex-shrink-0 whitespace-nowrap grade-mark pl-1 min-w-[5ch]"
               :class="getGradeLabel(index, ranks.length)"
           >
-            {{ counts[index] }}
-          </div>
+            {{ rank }}
+          </h4>
+
+          <input
+              type="number"
+              class="h-10 min-w-[80px] max-w-[100%] flex-1 text-center text-xl font-mono border border-gray-300 rounded py-1
+               appearance-none focus:outline-none focus:ring-0
+               [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
+               [-moz-appearance:textfield]"
+              :class="getGradeLabel(index, ranks.length)"
+              v-model.number="counts[index]"
+              @focus="clearIfZero(index)"
+              @blur="restoreIfEmpty(index)"
+              min="0"
+          />
 
           <button
-              @click="increment(index)"
-              class="px-4 py-2 bg-gray-900/50 text-white font-bold rounded hover:bg-gray-900/60"
+              @click="openModal(index)"
+              class="h-10 px-3 bg-gray-900/50 text-white font-bold rounded hover:bg-gray-900/60 flex-shrink-0"
           >
             ＋
           </button>
@@ -154,6 +175,15 @@ let getGradeLabel = (index, total) => {
       </li>
     </ul>
   </section>
+
+  <InputModal
+      :visible="showModal"
+      :index="modalIndex"
+      :modelValue="counts[modalIndex]"
+      message="加算する数値を入力してください"
+      @confirm="addToCount"
+      @close="showModal = false"
+  />
 </template>
 
 <style lang="scss">
@@ -222,6 +252,25 @@ $theme-colors-dark: ();
       border-left: 8px solid #{$color};
     }
   }
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+select,
+button {
+  outline: none;
+  box-shadow: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+  box-shadow: none !important;
 }
 
 </style>

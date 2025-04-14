@@ -15,7 +15,7 @@ export default defineConfig({
   build: {
     manifest: true, // ← 必須
     rollupOptions: {
-      input: path.resolve(__dirname, 'public/entry.js'),
+      input: path.resolve(__dirname, 'index.html'),
     }
   },
   resolve: {
