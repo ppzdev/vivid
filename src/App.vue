@@ -17,8 +17,8 @@ const weapons = ['白', '緑', '青', '紫', '橙']
   </h1>
   <main>
     <RequiredMaterials title="部品" name="equipments" :needs="3" :ranks="equipments"/>
-    <RequiredMaterials title="スキル" name="skill" :needs="3" :ranks="skills"/>
-    <RequiredMaterials title="装備材料" :needs="4" name="weapon" :ranks="weapons"/>
+    <RequiredMaterials title="スキル" name="skill" :needs="3" :ranks="skills" :isPieceEnabled="true"/>
+    <RequiredMaterials title="装備材料" :needs="4" name="weapon" :ranks="weapons" :defaultQuantity="70"/>
   </main>
 </template>
 

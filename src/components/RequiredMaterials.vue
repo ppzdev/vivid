@@ -7,18 +7,29 @@ const props = defineProps({
   needs: Number,
   ranks: Array,
   name: String,
+  isPieceEnabled: {
+    type: Boolean,
+    default: false,
+  },
+  defaultQuantity: {
+    type: Number,
+    default: 1,
+  },
 })
 
 const query = new URLSearchParams(window.location.search)
 
 const selectedRankIndex = ref(Number(query.get(props.name + '_selected') ?? props.ranks.length - 1))
-const quantity = ref(Number(query.get(props.name + '_quantity') ?? 1))
+const quantity = ref(Number(query.get(props.name + '_quantity') ?? props.defaultQuantity))
 const counts = ref(
     (query.get(props.name + '_counts') ?? props.ranks.map(() => 0).join(','))
         .split(',')
         .filter(x => x !== '')
         .map(Number)
 )
+console.log(quantity.value)
+const perPiece = ref(Number(query.get(props.name + '_pp') ?? 25))
+const pieceCount = ref(Number(query.get(props.name + '_pc') ?? 0))
 
 onMounted(() => {
   padCountsToRanks()
@@ -37,16 +48,22 @@ function updateQuery() {
   query.set(props.name + '_selected', selectedRankIndex.value.toString())
   query.set(props.name + '_counts', counts.value.join(','))
 
+  if (props.isPieceEnabled) {
+    query.set(props.name + '_pp', (perPiece.value ?? 25).toString())
+    query.set(props.name + '_pc', (pieceCount.value ?? 0).toString())
+  }
+
   const newUrl = `${window.location.pathname}?${query.toString()}`
   window.history.replaceState(null, '', newUrl)
 }
 
-watch([quantity, selectedRankIndex, counts], updateQuery, {deep: true})
+watch([quantity, selectedRankIndex, counts, perPiece, pieceCount], updateQuery, {deep: true})
 
 const required = computed(() => {
   let all = props.needs ** (selectedRankIndex.value) * quantity.value
   let useCounts = counts.value.slice(0, selectedRankIndex.value + 1)
   let required = useCounts.reduce((sum, val, index) => sum - props.needs ** index * val, all)
+  required -= pieceCount.value / perPiece.value
   return required > 0 ? required : 0
 })
 
@@ -70,9 +87,42 @@ let clearIfZero = (index) => {
   }
 }
 
+const clearIfZeroRef = (name) => {
+  switch (name) {
+    case 'perPiece':
+      perPiece.value = perPiece.value > 0 ? perPiece.value : null
+      break
+    case 'pieceCount':
+      pieceCount.value = pieceCount.value > 0 ? pieceCount.value : null
+      break
+    default:
+      break
+  }
+}
+
 let restoreIfEmpty = (index) => {
   if (counts.value[index] === '' || counts.value[index] === null) {
     counts.value[index] = 0
+  }
+}
+
+let restoreIfEmptyRef = (name) => {
+  switch (name) {
+    case 'perPiece':
+      if (!perPiece.value || perPiece.value < 1) {
+        perPiece.value = 25
+      }
+      break
+    case 'pieceCount':
+      if (!pieceCount.value) {
+        pieceCount.value = 0
+      }
+      break
+    default:
+      break
+  }
+  if (!ref.value) {
+    ref.value = 0
   }
 }
 
@@ -90,6 +140,13 @@ let addToCount = (index, value) => {
   showModal.value = false
 }
 
+let splitNumber = (index) => {
+  let n = parseFloat((required.value / ((props.needs ** index))).toFixed(4))
+  const integer = Math.trunc(n)
+  const decimalRaw = Math.abs(n - integer)
+  const decimal = decimalRaw === 0 ? '' : decimalRaw.toFixed(4).slice(1)
+  return {integer, decimal}
+}
 </script>
 
 <template>
@@ -117,10 +174,60 @@ let addToCount = (index, value) => {
          appearance-none focus:outline-none focus:ring-0
          [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
          [-moz-appearance:textfield]"
-  /> 個
+  />
+  <span class="align-middle ml-1">個</span>
 
   <h3 class="font-bold text-l">2. すでに持っているもの</h3>
   <ul class="mb-4">
+    <li
+        v-if="isPieceEnabled"
+    >
+      <div
+          class="mb-4 px-2 py-1 rounded-md grade-frame grade-bg grade-p"
+      >
+        <div class="flex items-center gap-2 flex-nowrap overflow-hidden">
+          <h4
+              class="font-bold flex-shrink-0 whitespace-nowrap pl-1 min-w-[5ch] grade-mark grade-p"
+          >
+            破片
+          </h4>
+
+          <input
+              type="number"
+              class="grade-p
+                h-10 min-w-[80px] max-w-[100%] flex-1 text-center text-xl font-mono rounded py-1
+               appearance-none focus:outline-none focus:ring-0
+               bg-white text-black border border-gray-300
+               dark:bg-gray-800 dark:text-white dark:border-gray-600
+               [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
+               [-moz-appearance:textfield]"
+              v-model.number="pieceCount"
+              @focus="clearIfZeroRef('pieceCount')"
+              @blur="restoreIfEmptyRef('pieceCount')"
+              min="0"
+          />
+          ←
+          <input
+              type="number"
+              class="grade-p
+                h-10 min-w-[2em] max-w-[2em] flex-1 text-center text-xl font-mono rounded py-1
+               appearance-none focus:outline-none focus:ring-0
+               bg-white text-black border border-gray-300
+               dark:bg-gray-800 dark:text-white dark:border-gray-600
+               [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none
+               [-moz-appearance:textfield]"
+              v-model.number="perPiece"
+              @focus="clearIfZeroRef('perPiece')"
+              @blur="restoreIfEmptyRef('perPiece')"
+              min="1"
+          />
+          個でLv.1
+
+        </div>
+      </div>
+
+    </li>
+
     <li
         v-for="(rank, index) in ranks.slice(0, selectedRankIndex + 1)"
         :key="index"
@@ -166,13 +273,40 @@ let addToCount = (index, value) => {
   <section class="mb-4">
     <h3 class="font-bold text-xl">必要数</h3>
 
-    <ul class="table mb-4">
+    <ul class="mb-4 tabular-nums">
+      <li
+          v-if="isPieceEnabled"
+      >
+        <span
+            class="pl-2 grade-mark"
+        >
+          <span class="font-bold text-xl">
+            破片:
+          </span>
+          <span class="font-bold text-xl inline-block text-right w-16">
+            {{ Math.trunc(parseFloat((required * perPiece).toFixed(4))) }}
+          </span>
+        </span>
+
+      </li>
       <li v-for="(rank, index) in ranks.slice(0, selectedRankIndex + 1)" :key="index">
         <span
             class="font-bold pl-2 text-xl grade-mark"
             :class="getGradeLabel(index, ranks.length)"
         >
-          {{ ranks[index] }}: {{ parseFloat((required / ((needs ** index))).toFixed(4)) }}
+          <span
+              class="font-bold text-xl"
+          >
+            {{ ranks[index] }}:
+          </span>
+          <span class="font-bold inline-block text-right"
+                :class="index > 8 ? 'w-[3.2rem]' : 'w-16'"
+          >
+            {{ splitNumber(index).integer }}
+          </span>
+          <span class="font-bold">
+            {{ splitNumber(index).decimal }}
+          </span>
         </span>
       </li>
     </ul>
@@ -182,7 +316,7 @@ let addToCount = (index, value) => {
       :visible="showModal"
       :index="modalIndex"
       :modelValue="counts[modalIndex]"
-      message="加算する数値を入力してください"
+      message="入力した数値を加算"
       @confirm="addToCount"
       @close="showModal = false"
   />
@@ -233,9 +367,11 @@ $theme-colors-dark: ();
 }
 
 .grade-frame {
+  border: 1px solid #ccc;
+
   @each $name, $color in $theme-colors-dark {
     &.#{$name} {
-      border: 1px solid #{$color};
+      border-color: #{$color};
     }
   }
 }
@@ -249,9 +385,11 @@ $theme-colors-dark: ();
 }
 
 .grade-mark {
+  border-left: 8px solid rgba(#000, 0);
+
   @each $name, $color in $theme-colors {
     &.#{$name} {
-      border-left: 8px solid #{$color};
+      border-left-color: #{$color};
     }
   }
 }

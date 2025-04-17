@@ -60,7 +60,10 @@ const props = defineProps({
   visible: Boolean,
   index: Number,
   message: String,
-  modelValue: Number,
+  modelValue: {
+    type: [Number, String],
+    default: 0,
+  },
 })
 
 const emits = defineEmits(['close', 'confirm'])
@@ -71,25 +74,6 @@ let blurTimeout = null
 let confirmed = false
 
 let scrollPosition = 0
-
-watch(() => props.visible, (val) => {
-  if (val) {
-    // スクロール位置を保存
-    scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0
-    // スクロールを無効化
-    document.body.style.overflow = 'hidden'
-    nextTick(() => {
-      if (inputValue.value === 0) {
-        inputValue.value = ''
-      }
-      inputRef.value?.focus()
-    })
-  } else {
-    // スクロール位置を戻す
-    document.body.style.overflow = 'auto'
-    window.scrollTo(0, scrollPosition)
-  }
-})
 
 watch(() => props.visible, (val) => {
   if (val) {
