@@ -15,11 +15,15 @@ const props = defineProps({
     type: Number,
     default: 1,
   },
+  defaultRankIndex: {
+    type: Number,
+    default: 0,
+  },
 })
 
 const query = new URLSearchParams(window.location.search)
 
-const selectedRankIndex = ref(Number(query.get(props.name + '_selected') ?? props.ranks.length - 1))
+const selectedRankIndex = ref(Number(query.get(props.name + '_selected') ?? props.defaultRankIndex))
 const quantity = ref(Number(query.get(props.name + '_quantity') ?? props.defaultQuantity))
 const counts = ref(
     (query.get(props.name + '_counts') ?? props.ranks.map(() => 0).join(','))
@@ -27,7 +31,7 @@ const counts = ref(
         .filter(x => x !== '')
         .map(Number)
 )
-console.log(quantity.value)
+
 const perPiece = ref(Number(query.get(props.name + '_pp') ?? 25))
 const pieceCount = ref(Number(query.get(props.name + '_pc') ?? 0))
 
