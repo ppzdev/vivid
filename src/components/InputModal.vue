@@ -11,6 +11,7 @@
 
         <input
             ref="inputRef"
+            :name="name+'-input'"
             v-model.number="inputValue"
             type="number"
             inputmode="numeric"
@@ -59,6 +60,7 @@ import {ref, watch, nextTick} from 'vue'
 const props = defineProps({
   visible: Boolean,
   index: Number,
+  name: String,
   message: String,
   modelValue: {
     type: [Number, String],

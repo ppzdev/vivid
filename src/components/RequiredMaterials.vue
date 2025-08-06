@@ -156,9 +156,9 @@ let splitNumber = (index) => {
 <template>
   <h2 class="font-bold text-xl">{{ title }}(素材数: {{ needs }}個)</h2>
 
-  <h3><label for="rank" class="font-bold text-l block mb-2">1. 必要数を計算したいもの</label></h3>
+  <h3><label :for="'rank-'+name" class="font-bold text-l block mb-2">1. 必要数を計算したいもの</label></h3>
   <select
-      id="rank"
+      :id="'rank-'+name"
       v-model="selectedRankIndex"
       class="block w-full max-w-xs h-10 px-3 py-2 text-xl font-bold rounded mb-4
          bg-white text-black border border-gray-300
@@ -171,6 +171,7 @@ let splitNumber = (index) => {
 
   <input
       type="number"
+      :name="name+'-quantity'"
       v-model="quantity"
       class="h-10 w-20 text-center text-xl rounded px-3 py-1 mb-4
          bg-white text-black border border-gray-300
@@ -198,6 +199,7 @@ let splitNumber = (index) => {
 
           <input
               type="number"
+              :name="name+'-piece-count'"
               class="grade-p
                 h-10 min-w-[80px] max-w-[100%] flex-1 text-center text-xl font-mono rounded py-1
                appearance-none focus:outline-none focus:ring-0
@@ -213,6 +215,7 @@ let splitNumber = (index) => {
           ←
           <input
               type="number"
+              :name="name+'-per-piece'"
               class="grade-p
                 h-10 min-w-[2em] max-w-[2em] flex-1 text-center text-xl font-mono rounded py-1
                appearance-none focus:outline-none focus:ring-0
@@ -250,6 +253,7 @@ let splitNumber = (index) => {
 
           <input
               type="number"
+              :name="name+index+'-count'"
               class="h-10 min-w-[80px] max-w-[100%] flex-1 text-center text-xl font-mono rounded py-1
                appearance-none focus:outline-none focus:ring-0
                bg-white text-black border border-gray-300
@@ -293,7 +297,7 @@ let splitNumber = (index) => {
         </span>
 
       </li>
-      <li v-for="(rank, index) in ranks.slice(0, selectedRankIndex + 1)" :key="index">
+      <li v-for="index in ranks.slice(0, selectedRankIndex + 1).length" :key="index">
         <span
             class="font-bold pl-2 text-xl grade-mark"
             :class="getGradeLabel(index, ranks.length)"
@@ -318,6 +322,7 @@ let splitNumber = (index) => {
 
   <InputModal
       :visible="showModal"
+      :name="name"
       :index="modalIndex"
       :modelValue="counts[modalIndex]"
       message="入力した数値を加算"

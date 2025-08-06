@@ -1,6 +1,6 @@
 <script setup>
 import RequiredMaterials from './components/RequiredMaterials.vue'
-import Footer from "@/components/Footer.vue";
+import Footer from "./components/Footer.vue";
 
 const equipments = ['Lv.1', 'Lv.2', 'Lv.3', 'Lv.4', 'Lv.5', 'Lv.6', 'Lv.7', 'Lv.8', 'Lv.9', 'Lv.10']
 const skills = ['Lv.1', 'Lv.2', 'Lv.3', 'Lv.4', 'Lv.5', 'Lv.6', 'Lv.7', 'Lv.8', 'Lv.9', 'Lv.10']
