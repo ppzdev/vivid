@@ -297,7 +297,7 @@ let splitNumber = (index) => {
         </span>
 
       </li>
-      <li v-for="index in ranks.slice(0, selectedRankIndex + 1).length - 1" :key="index">
+      <li v-for="(rank, index) in ranks.slice(0, selectedRankIndex + 1)" :key="name+rank">
         <span
             class="font-bold pl-2 text-xl grade-mark"
             :class="getGradeLabel(index, ranks.length)"
