@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import RequiredMaterials from './RequiredMaterials.vue'
+import {useRoute, useRouter} from "vue-router"
 
 defineProps<{
   isEquipment?: boolean
@@ -10,15 +11,34 @@ defineProps<{
 const equipments = ['Lv.1', 'Lv.2', 'Lv.3', 'Lv.4', 'Lv.5', 'Lv.6', 'Lv.7', 'Lv.8', 'Lv.9', 'Lv.10']
 const skills = ['Lv.1', 'Lv.2', 'Lv.3', 'Lv.4', 'Lv.5', 'Lv.6', 'Lv.7', 'Lv.8', 'Lv.9', 'Lv.10']
 const weapons = ['白', '緑', '青', '紫', '橙']
+
+const currentUrl = new URL(window.location.href)
+
+const route = useRoute()
+const router = useRouter()
+if (route.name === 'Top') {
+  if (
+      currentUrl.searchParams.get('equipments_counts') ||
+      currentUrl.searchParams.get('skill_counts') ||
+      currentUrl.searchParams.get('weapon_counts')
+  ) {
+    router.push({
+      name: 'Resource',
+      query: route.query,
+    })
+  } else {
+    useRouter().push({ name: 'Jusoko' })
+  }
+}
 </script>
 
 <template>
   <h1 class="mb-4">
     <a
-        href="../.."
+        :href="currentUrl.pathname"
         class="text-2xl text-blue-600 font-bold border-b border-b-blue-200"
     >素材数計算ツール</a>
-    <span>〜 素材あといくついるの？ 〜</span>
+    <span class="block">〜 素材あといくついるの？ 〜</span>
   </h1>
   <RequiredMaterials
       v-if="isEquipment"

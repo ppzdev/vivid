@@ -10,6 +10,7 @@ const router = createRouter({
     routes: [
         {
             path: '/',
+            name: 'Top',
             component: AppResource,
             props: {isEquipment: true, isSkill: true, isWeapon: true},
             meta: {title: '素材数計算ツール'}
@@ -43,7 +44,7 @@ const router = createRouter({
             meta: {title: '橙装備 - 素材数計算ツール'}
         },
         {
-            path: '/jusoko',
+            path: '/simulator/jusoko',
             name: 'Jusoko',
             component: AppJusoko,
             meta: {title: '重装甲空母の宝物シミュレーター'}
@@ -52,7 +53,7 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
-    document.title = to.meta.title || 'ppzdev'
+    document.title = (to.meta.title || 'ppzdev') as string
 })
 
 createApp(AppLayout)

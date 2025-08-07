@@ -40,7 +40,7 @@ const menus = [
 <template>
   <nav>
     <button
-        class="border border-gray-300 bg-white p-2 rounded-sm float-right relative z-10 cursor-pointer"
+        class="border border-gray-300 bg-white p-2 rounded-sm float-right relative cursor-pointer z-50"
         type="button"
         @click.prevent="isShowMenu = !isShowMenu"
     >
@@ -50,7 +50,7 @@ const menus = [
 
     </button>
     <transition name="fade">
-      <div v-if="isShowMenu" class="border border-gray-300 bg-gray-100 absolute top-3 right-3">
+      <div v-if="isShowMenu" class="border border-gray-300 bg-gray-100 absolute top-3 right-3 z-40">
         <h2 class="px-4 py-3.5 border-b border-b-gray-300 font-bold">Menu</h2>
         <div
             v-for="menu in menus"
