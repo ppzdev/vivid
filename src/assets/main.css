@@ -64,6 +64,13 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
+button, img {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 #app {
   max-width: 480px;
   margin: 0 auto;

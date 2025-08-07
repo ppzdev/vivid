@@ -50,7 +50,7 @@ const menus = [
 
     </button>
     <transition name="fade">
-      <div v-if="isShowMenu" class="border border-gray-300 bg-gray-100 absolute top-3 right-3 z-40">
+      <div v-if="isShowMenu" class="shadow-md border border-gray-300 bg-gray-100 absolute top-3 right-3 z-40">
         <h2 class="px-4 py-3.5 border-b border-b-gray-300 font-bold">Menu</h2>
         <div
             v-for="menu in menus"
