@@ -18,7 +18,7 @@ function isGotReward(rewardIndex: number) {
         v-for="(setting, index) in rewardSettings" :key="index"
     >
       <span
-          class="relative"
+          class="relative block"
           :class="{
             'opacity-50': useTicket < setting.count,
           }"
