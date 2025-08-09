@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import RequiredMaterials from './RequiredMaterials.vue'
 import {useRoute, useRouter} from "vue-router"
+import {computed} from "vue"
 
 defineProps<{
   isEquipment?: boolean
@@ -30,12 +31,20 @@ if (route.name === 'Top') {
     useRouter().push({ name: 'Jusoko' })
   }
 }
+
+const initialUrl = computed(() :string => {
+  let initialUrl = new URL(window.location.href)
+  const hash = window.location.hash
+  initialUrl.search = ''
+  initialUrl.hash = hash !== '#/' ? hash : '/resource_calculator'
+  return initialUrl.toString()
+})
 </script>
 
 <template>
   <h1 class="mb-4">
     <a
-        :href="currentUrl.pathname"
+        :href="initialUrl"
         class="text-2xl text-blue-600 font-bold border-b border-b-blue-200"
     >素材数計算ツール</a>
     <span class="block">〜 素材あといくついるの？ 〜</span>

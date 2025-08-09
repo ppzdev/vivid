@@ -1,8 +1,12 @@
 <script setup lang="ts">
-import AppFooter from "./AppFooter.vue";
-import {ref} from "vue";
+import AppFooter from "./AppFooter.vue"
+import {ref} from "vue"
+import {useRouter} from "vue-router"
+import { useClickOutside } from '../../composables/click_outside'
 
 const isShowMenu = ref<boolean>(false)
+const menuRef = ref<HTMLElement | null>(null)
+const menuButtonRef = ref<HTMLElement | null>(null)
 const menus = [
   {
     group: "素材数計算ツール",
@@ -35,11 +39,26 @@ const menus = [
     ]
   },
 ]
+
+useClickOutside(menuRef, menuButtonRef, () => {
+  isShowMenu.value = false
+})
+
+function getLinkUrl(name: string): string {
+  const router = useRouter()
+  let resolved = router.getRoutes().find(route => route.name === name)
+
+  let url = new URL(location.href)
+  url.search = ''
+  url.hash = resolved?.path ?? ''
+  return url.toString()
+}
 </script>
 
 <template>
   <nav>
     <button
+        ref="menuButtonRef"
         class="border border-gray-300 bg-white p-2 rounded-sm float-right relative cursor-pointer z-50"
         type="button"
         @click.prevent="isShowMenu = !isShowMenu"
@@ -50,7 +69,10 @@ const menus = [
 
     </button>
     <transition name="fade">
-      <div v-if="isShowMenu" class="shadow-md border border-gray-300 bg-gray-100 absolute top-3 right-3 z-40">
+      <div
+          v-if="isShowMenu" ref="menuRef"
+          class="shadow-md border border-gray-300 bg-gray-100 absolute top-3 right-3 z-40"
+      >
         <h2 class="px-4 py-3.5 border-b border-b-gray-300 font-bold">Menu</h2>
         <div
             v-for="menu in menus"
@@ -64,7 +86,9 @@ const menus = [
                 :key="link.name"
                 class="px-4 py-1 box-border"
             >
-              <router-link class="underline" :to="{name: link.name}" @click="isShowMenu = false">{{ link.title }} <span>{{ link.sub }}</span></router-link>
+              <a class="underline" :href="getLinkUrl(link.name)" @click="isShowMenu = false">
+                {{ link.title }} <span>{{ link.sub }}</span>
+              </a>
             </li>
           </ul>
         </div>

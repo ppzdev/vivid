@@ -57,8 +57,10 @@ function updateQuery() {
     query.set(props.name + '_pc', (pieceCount.value ?? 0).toString())
   }
 
-  const newUrl = `${window.location.pathname}?${query.toString()}`
-  window.history.replaceState(null, '', newUrl)
+  const newUrl = new URL(location.href)
+  newUrl.search = query.toString()
+
+  window.history.replaceState(null, '', newUrl.toString())
 }
 
 watch([quantity, selectedRankIndex, counts, perPiece, pieceCount], updateQuery, {deep: true})

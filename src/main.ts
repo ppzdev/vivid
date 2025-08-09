@@ -1,45 +1,45 @@
 import { createApp } from 'vue'
-import {createMemoryHistory, createRouter} from 'vue-router'
-import AppResource from './components/resource/AppResource.vue'
+import {createRouter, createWebHashHistory} from 'vue-router'
+import ResourceCalculator from './components/resource_calculator/ResourceCalculator.vue'
 import AppJusoko from "./components/jusoko/AppJusoko.vue"
 import AppLayout from "./components/layout/AppLayout.vue"
 import './assets/main.css'
 
 const router = createRouter({
-    history: createMemoryHistory(),
+    history: createWebHashHistory(import.meta.env.BASE_URL),
     routes: [
         {
             path: '/',
             name: 'Top',
-            component: AppResource,
+            component: ResourceCalculator,
             props: {isEquipment: true, isSkill: true, isWeapon: true},
             meta: {title: '素材数計算ツール'}
         },
         {
-            path: '/resource',
+            path: '/resource_calculator',
             name: 'Resource',
-            component: AppResource,
+            component: ResourceCalculator,
             props: {isEquipment: true, isSkill: true, isWeapon: true},
             meta: {title: '素材数計算ツール'}
         },
         {
-            path: '/resource/equipment',
+            path: '/resource_calculator/equipment',
             name: 'Resource/equipment',
-            component: AppResource,
+            component: ResourceCalculator,
             props: {isEquipment: true},
             meta: {title: 'めざせ速10 - 素材数計算ツール'}
         },
         {
-            path: '/resource/skill',
+            path: '/resource_calculator/skill',
             name: 'Resource/skill',
-            component: AppResource,
+            component: ResourceCalculator,
             props: {isSkill: true},
             meta: {title: '専用7 - 素材数計算ツール'}
         },
         {
-            path: '/resource/weapon',
+            path: '/resource_calculator/weapon',
             name: 'Resource/weapon',
-            component: AppResource,
+            component: ResourceCalculator,
             props: {isWeapon: true},
             meta: {title: '橙装備 - 素材数計算ツール'}
         },
