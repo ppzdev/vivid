@@ -121,6 +121,10 @@ export const dailyRewardSettings = [
         count: 20,
         reward: 5,
     },
+    {
+        count: 40,
+        reward: 8,
+    },
 ]
 
 export const totalRewardSettings = [
