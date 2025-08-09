@@ -1,12 +1,12 @@
 import { createApp } from 'vue'
-import {createRouter, createWebHistory} from 'vue-router'
+import {createMemoryHistory, createRouter} from 'vue-router'
 import AppResource from './components/resource/AppResource.vue'
 import AppJusoko from "./components/jusoko/AppJusoko.vue"
 import AppLayout from "./components/layout/AppLayout.vue"
 import './assets/main.css'
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createMemoryHistory(),
     routes: [
         {
             path: '/',
