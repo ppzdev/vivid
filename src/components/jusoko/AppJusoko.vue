@@ -11,7 +11,7 @@
   <h2 class="mb-2 text-3xl text-center">Day: {{ day + 1 }}</h2>
   <div class="font-bold text-right">購入：{{ dailyInfo.quantity }}枚 / JPY {{ dailyInfo.price }}</div>
 
-  <section class="p-4 mb-2 bg-blue-50">
+  <section class="p-4 mb-2 bg-blue-50 dark:bg-blue-950">
     <h3 class="font-bold">重装甲空母の宝物ギフト</h3>
     <ul>
       <li
@@ -35,7 +35,7 @@
             <span class="leading-none font-bold text-xl text-gray-600">
               JPY<br>{{ ticketsSetting.price }}
             </span>
-            <span class="absolute text-sm font-bold text-right w-14 left-0 bottom-[-2px]">{{
+            <span class="absolute text-sm font-bold text-right dark:text-gray-800 w-14 left-0 bottom-[-2px]">{{
                 ticketsSetting.quantity
               }}</span>
           </button>
@@ -47,7 +47,7 @@
     </ul>
   </section>
 
-  <section class="flex p-4 mb-2 gap-4 bg-purple-100">
+  <section class="flex p-4 mb-2 gap-4 bg-purple-100 dark:bg-blue-900">
     <button v-for="setting in [
           {
             name: '解禁',
@@ -60,32 +60,32 @@
             :disabled="remainTicket < setting.quantity"
             @click.prevent="useTicket(setting.quantity)"
             class="py-1 border cursor-pointer w-32 grow
-           border-gray-400 rounded-xl bg-amber-400 relative"
+           border-gray-400 rounded-xl bg-orange-300 relative"
             :class="{
           'opacity-50': remainTicket < setting.quantity,
           'pointer-events-none': remainTicket < setting.quantity,
         }"
     >
-      <span class="block font-bold text-xl">{{ setting.name }}</span>
+      <span class="block font-bold text-xl text-gray-800">{{ setting.name }}</span>
       <img
           class="inline w-8"
           src="../../assets/img/jusoko/ticket.png"
           alt="ticket"
       >
-      <span class="font-bold ml-2">{{ setting.quantity }}</span>
+      <span class="font-bold ml-2 text-gray-800">{{ setting.quantity }}</span>
     </button>
   </section>
 
   <section
       v-if="latestResult"
-      class="p-4 mb-2 bg-purple-100"
+      class="p-4 mb-2 bg-purple-100 dark:bg-purple-900"
   >
     <h3 class="text-2xl font-bold mt-[-0.25rem] mb-2">Get!</h3>
     <item-list :items="latestResult"/>
   </section>
 
   <section
-      class="p-4 mb-2 bg-amber-100"
+      class="p-4 mb-2 bg-amber-100 dark:bg-amber-950"
   >
     <h3 class="text-base font-bold mt-[-0.25rem] mb-2">毎日任務：{{ dailyInfo.useTicket }}</h3>
     <reward-list
@@ -96,7 +96,7 @@
   </section>
 
   <section
-      class="p-4 mb-2 bg-amber-100"
+      class="p-4 mb-2 bg-amber-100 dark:bg-amber-950"
   >
     <h3 class="text-base font-bold mt-[-0.25rem] mb-2">累計抽選回数：{{ totalInfo.useTicket }}</h3>
     <reward-list
@@ -132,7 +132,7 @@
 
   <hr class="mb-2">
 
-  <section class="p-4 mb-2 bg-gray-100">
+  <section class="p-4 mb-2 bg-gray-100 dark:bg-gray-800">
     <h3 class="text-xl font-bold mt-[-0.25rem] mb-2">累計</h3>
     <item-list :items="prizeSummary"/>
 
@@ -146,7 +146,7 @@
     <h3 class="text-xl font-bold mt-[-0.25rem] mb-2 flex justify-between">
       <span>履歴</span>
       <button
-          class="p-1 text-base border border-gray-300 bg-white rounded-md cursor-pointer"
+          class="p-1 text-base border border-gray-300 bg-white dark:bg-gray-800 rounded-md cursor-pointer"
           @click.prevent="clearHistory"
       >
         Clear

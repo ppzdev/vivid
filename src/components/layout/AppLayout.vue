@@ -59,27 +59,27 @@ function getLinkUrl(name: string): string {
   <nav>
     <button
         ref="menuButtonRef"
-        class="border border-gray-300 bg-white p-2 rounded-sm float-right relative cursor-pointer z-50"
+        class="border border-gray-300 bg-white p-2 rounded-sm float-right relative cursor-pointer z-50 dark:bg-gray-800"
         type="button"
         @click.prevent="isShowMenu = !isShowMenu"
     >
-      <svg class="w-8" xmlns="http://www.w3.org/2000/svg" viewBox="-0.2 -0.2 2.4 2.4">
-        <path d="M0 0H2M0 1H2M0 2H2" stroke="#333333" stroke-width="0.4" fill="none"/>
+      <svg class="w-8 menu" xmlns="http://www.w3.org/2000/svg" viewBox="-0.2 -0.2 2.4 2.4">
+        <path d="M0 0H2M0 1H2M0 2H2" stroke-width="0.4" fill="none"/>
       </svg>
 
     </button>
     <transition name="fade">
       <div
           v-if="isShowMenu" ref="menuRef"
-          class="shadow-md border border-gray-300 bg-gray-100 absolute top-3 right-3 z-40"
+          class="shadow-md border border-gray-300 bg-gray-100 dark:bg-gray-800 absolute top-3 right-3 z-40"
       >
         <h2 class="px-4 py-3.5 border-b border-b-gray-300 font-bold">Menu</h2>
         <div
             v-for="menu in menus"
             :key="menu.group"
-            class="bg-white mb-2">
+            class="bg-white dark:bg-gray-900 mb-2">
           <h3
-              class="font-bold px-2 pt-2 ml-2 border-b border-b-gray-400">{{ menu.group }}</h3>
+              class="font-bold px-2 pt-2 ml-2 border-b border-b-gray-400 dark:bg-gray-900">{{ menu.group }}</h3>
           <ul>
             <li
                 v-for="link in menu.links"
