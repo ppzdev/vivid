@@ -24,7 +24,7 @@ function isGotReward(rewardIndex: number) {
           }"
       >
         <img class="w-20" src="../../assets/img/jusoko/prize_coin.png" alt="key">
-        <span class="leading-none font-bold text-white text-sm absolute bottom-1.5 right-1.5">{{ setting.reward }}</span>
+        <span class="block leading-none font-bold text-white text-sm absolute bottom-1.5 right-1.5">{{ setting.reward }}</span>
         <img
             v-if="isGotReward(index)"
             class="absolute bottom-6 right-6"
