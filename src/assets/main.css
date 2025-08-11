@@ -80,7 +80,7 @@ button, img {
 #app {
   max-width: 480px;
   margin: 0 auto;
-  padding: 1rem;
+  padding: 0.5rem;
   font-weight: normal;
   position: relative;
 }

@@ -22,7 +22,7 @@
         <div class="">
           <button
             class="min-w-30 px-2 py-1.5 m-1 border flex justify-between cursor-pointer
-             border-gray-400 rounded-xl bg-orange-200 relative"
+             border-gray-400 rounded-xl bg-orange-200 relative dark:bg-orange-900"
             :class="{'opacity-50': remainPurchaseTicket(index) <= 0, 'pointer-events-none': remainPurchaseTicket(index) <= 0}"
             @click.prevent="purchaseTicket(index)"
             :disabled="remainPurchaseTicket(index) <= 0"
@@ -32,10 +32,10 @@
               src="../../assets/img/jusoko/ticket.png"
               alt="ticket"
             >
-            <span class="leading-none font-bold text-xl text-gray-600">
+            <span class="leading-none font-bold text-xl">
               JPY<br>{{ ticketsSetting.price }}
             </span>
-            <span class="absolute text-sm font-bold text-right dark:text-gray-800 w-14 left-0 bottom-[-2px]">{{
+            <span class="absolute text-sm font-bold text-right w-14 left-0 bottom-[-2px]">{{
                 ticketsSetting.quantity
               }}</span>
           </button>
@@ -60,19 +60,19 @@
             :disabled="remainTicket < setting.quantity"
             @click.prevent="useTicket(setting.quantity)"
             class="py-1 border cursor-pointer w-32 grow
-           border-gray-400 rounded-xl bg-orange-300 relative"
+           border-gray-400 rounded-xl bg-orange-300 relative dark:bg-orange-800"
             :class="{
           'opacity-50': remainTicket < setting.quantity,
           'pointer-events-none': remainTicket < setting.quantity,
         }"
     >
-      <span class="block font-bold text-xl text-gray-800">{{ setting.name }}</span>
+      <span class="block font-bold text-xl">{{ setting.name }}</span>
       <img
           class="inline w-8"
           src="../../assets/img/jusoko/ticket.png"
           alt="ticket"
       >
-      <span class="font-bold ml-2 text-gray-800">{{ setting.quantity }}</span>
+      <span class="font-bold ml-2">{{ setting.quantity }}</span>
     </button>
   </section>
 
