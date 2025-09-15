@@ -70,6 +70,15 @@ svg.menu {
     stroke: var(--color-stroke);
 }
 
+button {
+    cursor: pointer;
+}
+
+button:active {
+    box-shadow: 0 2px #666;
+    transform: translateY(2px);
+}
+
 button, img {
     -webkit-user-select: none;
     -moz-user-select: none;
